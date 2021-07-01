@@ -50,13 +50,11 @@ pipeline {
             
         stage("Docker push") {
             environment {
-                DOCKER_USERNAME = credentials("docker-user")
-                DOCKER_PASSWORD = credentials("docker-password")
+                DOCKER_CREDENTIALS = credentials("docker-credentials")
             }
             steps {
-                sh "echo ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
-                //sh "sudo docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
-                //sh "sudo docker push icentra/laravel8cd"
+                sh "sudo docker login --username ${DOCKER_CREDENTIALS_USR} --password ${DOCKER_CREDENTIALS_PSW}"
+                sh "sudo docker push icentra/laravel8cd"
             }
         }
         stage("Deploy to staging") {
