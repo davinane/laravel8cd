@@ -43,9 +43,9 @@ pipeline {
         }
         stage("Docker build") {
             steps {
-                sh "docker rmi icentra/laravel8cd"
-                sh "docker build -t icentra/laravel8cd ."
-                sh "docker-compose build"
+                sh "sudo docker rmi icentra/laravel8cd"
+                sh "sudo docker build -t icentra/laravel8cd ."
+                sh "sudo docker-compose build"
                 sh 'php artisan migrate'
             }
         }
@@ -55,13 +55,13 @@ pipeline {
                 DOCKER_PASSWORD = credentials("docker-password")
             }
             steps {
-                sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
-                sh "docker push icentra/laravel8cd"
+                sh "sudo docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
+                sh "sudo docker push icentra/laravel8cd"
             }
         }
         stage("Deploy to staging") {
             steps {
-                sh "docker-compose up -d"
+                sh "sudo docker-compose up -d"
             }
         }
         stage("Acceptance test curl") {
@@ -76,7 +76,7 @@ pipeline {
             }
             post {
                 always {
-                    sh "docker stop laravel8cd"
+                    sh "sudo docker stop laravel8cd"
                 }
             }
         }
