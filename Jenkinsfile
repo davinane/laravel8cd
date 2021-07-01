@@ -45,7 +45,7 @@ pipeline {
             steps {
                 sh "sudo docker rmi icentra/laravel8cd"
                 sh "sudo docker build -t icentra/laravel8cd ."
-                sh "sudo docker-compose build -f docker-compose.yml"
+                sh "sudo docker-compose build laravel-mysql"
                 sh 'php artisan migrate'
             }
         }
