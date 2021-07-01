@@ -42,9 +42,9 @@ node {
         }
         stage("Docker build") {
             app.inside {
-                sh "sudo docker rmi icentra/laravel8cd"
-                sh "sudo docker build -t icentra/laravel8cd ."
+                sh "sudo docker rmi icentra/laravel8cd" 
             }
+            app = docker.build("icentra/laravel8cd")
         }
             
         stage('Push image') {
