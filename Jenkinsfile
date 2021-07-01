@@ -86,7 +86,6 @@ pipeline {
                     sh "sudo docker stop laravel8cd"
                 }
             }
-        }
-        }
+       }
     }
 }
