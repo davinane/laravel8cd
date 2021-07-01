@@ -44,7 +44,8 @@ pipeline {
         }
         stage("Docker build") {
             steps {
-                sh "docker build -t danielgara/laravel8cd ."
+                sh "docker build -t icentra/laravel8cd ."
+                sh "docker-compose build"
             }
         }
         stage("Docker push") {
@@ -54,12 +55,12 @@ pipeline {
             }
             steps {
                 sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
-                sh "docker push danielgara/laravel8cd"
+                sh "docker push icentra/laravel8cd"
             }
         }
         stage("Deploy to staging") {
             steps {
-                sh "docker run -d --rm -p 80:80 --name laravel8cd danielgara/laravel8cd"
+                sh "docker-compose up -d"
             }
         }
         stage("Acceptance test curl") {
