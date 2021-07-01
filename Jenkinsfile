@@ -1,13 +1,14 @@
-node {
-    def app
+pipeline {
+    agent any
+    stages {
         stage("Build") {
-            app.environment {
+            environment {
                 DB_HOST = credentials("laravel-host")
                 DB_DATABASE = credentials("laravel-database")
                 DB_USERNAME = credentials("laravel-user")
                 DB_PASSWORD = credentials("laravel-password")
             }
-            app.inside {
+            step {
                 sh 'php --version'
                 sh 'composer install'
                 sh 'composer --version'
@@ -21,7 +22,7 @@ node {
             }
         }
         stage("Unit test") {
-            app.inside {
+            step {
                 sh 'php artisan test'
             }
         }
@@ -31,27 +32,27 @@ node {
             }
         }
         stage("Static code analysis larastan") {
-            app.inside {
+            step {
                 sh "vendor/bin/phpstan analyse --memory-limit=2G"
             }
         }
         stage("Static code analysis phpcs") {
-            app.inside {
+            step {
                 sh "vendor/bin/phpcs"
             }
         }
         stage("Docker build") {
-            app.inside {
+            step {
                 sh "sudo docker rmi icentra/laravel8cd" 
             }
             app = docker.build("icentra/laravel8cd")
         }
             
         stage('Push image') {
-            app.inside {
-                docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                    app.push("${env.BUILD_NUMBER}")
-                    app.push("latest")
+            step {
+                withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                    push("${env.BUILD_NUMBER}")
+                    push("latest")
                 }
             }
         }
@@ -63,19 +64,20 @@ node {
             }
         }
         stage("Acceptance test curl") {
-            app.inside {
+            step {
                 sleep 20
                 sh "chmod +x acceptance_test.sh && ./acceptance_test.sh"
             }
         }
         stage("Acceptance test codeception") {
-            app.inside {
+            step {
                 sh "vendor/bin/codecept run"
             }
-            app.post {
+            post {
                 always {
                     sh "sudo docker stop laravel8cd"
                 }
             }
         }
+}
 }
