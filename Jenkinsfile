@@ -49,8 +49,12 @@ pipeline {
         }
         
         stage('docker-compose') {
-           steps {
-              sh "docker-compose build"
+           steps([$class: 'DockerComposeBuilder']) {
+              useCustomDockerComposeFile: false
+              dockerComposeFile: "docker-compose.yml"
+               option {
+                   $class: 'StopAllServices'
+               }
             }
         }
             
