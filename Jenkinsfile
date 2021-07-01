@@ -53,7 +53,7 @@ pipeline {
               useCustomDockerComposeFile: false
               dockerComposeFile: "docker-compose.yml"
                option {
-                   $class: 'StopAllServices'
+                   $class: 'StartAllServices'
                }
             }
         }
