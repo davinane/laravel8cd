@@ -1,4 +1,9 @@
 pipeline {
+    environment {
+        imagename = "icentra/laravel8cd"
+        dockerImage = ""
+    }
+    
     agent any
     stages {
         stage("Build") {
@@ -45,20 +50,23 @@ pipeline {
             step {
                 sh "sudo docker rmi icentra/laravel8cd" 
             }
-            app = docker.build("icentra/laravel8cd")
+            script {
+                dockerImage = docker.build imagename
+            }
         }
             
         stage('Push image') {
             step {
-                withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                    push("${env.BUILD_NUMBER}")
-                    push("latest")
-                }
+                script {
+                    dockerImage.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials'){
+                    dockerImage.push("${env.BUILD_NUMBER}")
+                    dockerImage.push("latest")
+                 }
             }
         }
         
         stage("Deploy to staging") {
-            app.inside {
+            step {
                 sh "sudo docker-compose up -d"
                 sh 'php artisan migrate'
             }
