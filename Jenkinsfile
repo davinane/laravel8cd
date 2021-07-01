@@ -45,10 +45,14 @@ pipeline {
             steps {
                 sh "sudo docker rmi icentra/laravel8cd"
                 sh "sudo docker build -t icentra/laravel8cd ."
-                sh "sudo docker-compose build laravel-mysql"
-                sh 'php artisan migrate'
             }
         }
+        
+        stage('docker-compose') {
+           steps {
+              sh "docker-compose build"
+        }
+            
         stage("Docker push") {
             environment {
                 DOCKER_USERNAME = credentials("docker-user")
@@ -62,6 +66,7 @@ pipeline {
         stage("Deploy to staging") {
             steps {
                 sh "sudo docker-compose up -d"
+                sh 'php artisan migrate'
             }
         }
         stage("Acceptance test curl") {
