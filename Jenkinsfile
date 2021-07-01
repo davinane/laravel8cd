@@ -71,16 +71,5 @@ pipeline {
                 //sh 'php artisan migrate'
             }
         }
-        stage("Acceptance test curl") {
-            steps {
-                sleep 20
-                sh "chmod +x acceptance_test.sh && ./acceptance_test.sh"
-            }
-        }
-        stage("Acceptance test codeception") {
-            steps {
-                sh "vendor/bin/codecept run"
-            }
-       }
     }
 }
