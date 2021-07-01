@@ -44,6 +44,7 @@ pipeline {
         }
         stage("Docker build") {
             steps {
+                sh "docker rmi icentra/laravel8cd"
                 sh "docker build -t icentra/laravel8cd ."
                 sh "docker-compose build"
             }
