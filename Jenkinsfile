@@ -13,7 +13,7 @@ pipeline {
                 DB_USERNAME = credentials("laravel-user")
                 DB_PASSWORD = credentials("laravel-password")
             }
-            step {
+            steps {
                 sh 'php --version'
                 sh 'composer install'
                 sh 'composer --version'
@@ -27,27 +27,27 @@ pipeline {
             }
         }
         stage("Unit test") {
-            step {
+            steps {
                 sh 'php artisan test'
             }
         }
         stage("Code coverage") {
-            app.inside {
+            steps {
                 sh "vendor/bin/phpunit --coverage-html 'reports/coverage'"
             }
         }
         stage("Static code analysis larastan") {
-            step {
+            steps {
                 sh "vendor/bin/phpstan analyse --memory-limit=2G"
             }
         }
         stage("Static code analysis phpcs") {
-            step {
+            steps {
                 sh "vendor/bin/phpcs"
             }
         }
         stage("Docker build") {
-            step {
+            steps {
                 sh "sudo docker rmi icentra/laravel8cd" 
             }
             script {
@@ -56,7 +56,7 @@ pipeline {
         }
             
         stage('Push image') {
-            step {
+            steps {
                 script {
                     dockerImage.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials'){
                     dockerImage.push("${env.BUILD_NUMBER}")
@@ -66,19 +66,19 @@ pipeline {
         }
         
         stage("Deploy to staging") {
-            step {
+            steps {
                 sh "sudo docker-compose up -d"
                 sh 'php artisan migrate'
             }
         }
         stage("Acceptance test curl") {
-            step {
+            steps {
                 sleep 20
                 sh "chmod +x acceptance_test.sh && ./acceptance_test.sh"
             }
         }
         stage("Acceptance test codeception") {
-            step {
+            steps {
                 sh "vendor/bin/codecept run"
             }
             post {
