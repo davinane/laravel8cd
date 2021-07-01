@@ -83,7 +83,7 @@ pipeline {
             }
             post {
                 always {
-                    sh "sudo docker stop laravel8cd"
+                    sh "sudo docker stop davidinane/laravel8cd"
                 }
             }
        }
