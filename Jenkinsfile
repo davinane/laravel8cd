@@ -46,9 +46,11 @@ pipeline {
                 sh "vendor/bin/phpcs"
             }
         }
-        stage("Docker build") {            
-            script {
-                dockerImage = docker.build imagename
+        stage("Docker build") {
+            steps {
+                script {
+                    dockerImage = docker.build imagename
+                }
             }
         }
             
