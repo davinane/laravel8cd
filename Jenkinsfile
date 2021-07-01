@@ -54,16 +54,16 @@ pipeline {
             }
         }
             
-        stage('Push image') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials'){
-                    dockerImage.push("${env.BUILD_NUMBER}")
-                    dockerImage.push("latest")
-                    }
-                 }
-            }
-        }
+        //stage('Push image') {
+        //    steps {
+        //        script {
+        //            docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials'){
+        //            dockerImage.push("${env.BUILD_NUMBER}")
+        //            dockerImage.push("latest")
+        //            }
+        //         }
+        //    }
+        //}
         
         stage("Deploy to staging") {
             steps {
