@@ -48,15 +48,13 @@ pipeline {
             }
         }
             
-        stage("Docker push") {
-            environment {
-                DOCKER_CREDENTIALS = credentials("docker-credentials")
-            }
-            steps {
-                sh "sudo docker login --username ${DOCKER_CREDENTIALS_USR} --password ${DOCKER_CREDENTIALS_PSW}"
-                sh "sudo docker push icentra/laravel8cd"
+        stage('Push image') {
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
             }
         }
+        
         stage("Deploy to staging") {
             steps {
                 sh "sudo docker-compose up -d"
