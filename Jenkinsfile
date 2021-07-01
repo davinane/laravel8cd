@@ -47,16 +47,6 @@ pipeline {
                 sh "sudo docker build -t icentra/laravel8cd ."
             }
         }
-        
-        stage('docker-compose') {
-           steps([$class: 'DockerComposeBuilder']) {
-              useCustomDockerComposeFile: false
-              dockerComposeFile: "docker-compose.yml"
-               option {
-                   $class: 'StartAllServices'
-               }
-            }
-        }
             
         stage("Docker push") {
             environment {
