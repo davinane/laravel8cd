@@ -46,10 +46,7 @@ pipeline {
                 sh "vendor/bin/phpcs"
             }
         }
-        stage("Docker build") {
-            steps {
-                sh "sudo docker rmi icentra/laravel8cd" 
-            }
+        stage("Docker build") {            
             script {
                 dockerImage = docker.build imagename
             }
