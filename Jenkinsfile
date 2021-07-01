@@ -46,6 +46,7 @@ pipeline {
                 sh "docker rmi icentra/laravel8cd"
                 sh "docker build -t icentra/laravel8cd ."
                 sh "docker-compose build"
+                sh 'php artisan migrate'
             }
         }
         stage("Docker push") {
