@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        imagename = "icentra/laravel8cd"
+        imagename = "davidinane/laravel8cd"
         dockerImage = ""
     }
     
