@@ -68,7 +68,7 @@ pipeline {
         stage("Deploy to staging") {
             steps {
                 sh "sudo docker-compose up -d"
-                sh 'php artisan migrate'
+                //sh 'php artisan migrate'
             }
         }
         stage("Acceptance test curl") {
