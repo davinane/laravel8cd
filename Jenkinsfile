@@ -81,11 +81,6 @@ pipeline {
             steps {
                 sh "vendor/bin/codecept run"
             }
-            post {
-                always {
-                    sh "sudo docker stop davidinane/laravel8cd"
-                }
-            }
        }
     }
 }
